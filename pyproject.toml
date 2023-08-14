@@ -8,10 +8,12 @@ readme = "README.md"
 packages = [{include = "cch_todo"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 uvicorn = "^0.23.2"
 fastapi = "0.97.0"
 black = "^23.7.0"
+flake8 = "^6.1.0"
+sqlalchemy = "^2.0.19"
 
 
 [build-system]
