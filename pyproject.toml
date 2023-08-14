@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "cch-todo"
+version = "0.1.0"
+description = ""
+authors = ["cch0807 <ckdgus11021@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cch_todo"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+uvicorn = "^0.23.2"
+fastapi = "0.97.0"
+black = "^23.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
