@@ -15,4 +15,10 @@ SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 session = SessionFactory()
 
-session.scalar(select(1))
+
+def get_db():
+    session = SessionFactory()
+    try:
+        yield session
+    finally:
+        session.close()
