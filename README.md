@@ -10,6 +10,9 @@ fastAPI 공부를 위한 미니 프로젝트
 - alembic `1.11.2`
 - pymysql `1.1.0`
 - cryptography `41.0.3`
+- httpx
+- pytest
+- pytest-mock
 - uvicorn
 - black
 

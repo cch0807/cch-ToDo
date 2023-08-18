@@ -22,13 +22,6 @@ def health_check_handler():
     return {"ping": "pong"}
 
 
-todo_data = {
-    1: {"id": 1, "content": "test data 1", "is_done": True},
-    2: {"id": 2, "content": "test data 2", "is_done": False},
-    3: {"id": 3, "content": "test data 3", "is_done": False},
-}
-
-
 @app.get("/todos", status_code=200)
 def get_todos_handler(
     order: str | None = None, session: Session = Depends(get_db)
@@ -36,12 +29,16 @@ def get_todos_handler(
     todos: List[ToDo] = get_todos(session=session)
 
     if order and order == "DESC":
-        return ToDoListSchema(todos=[ToDoSchema.from_orm(todo) for todo in todos][::-1])
+        return ToDoListSchema(
+            todos=[ToDoSchema.from_orm(todo) for todo in todos][::-1]
+        )
     return ToDoListSchema(todos=[ToDoSchema.from_orm(todo) for todo in todos])
 
 
 @app.get("/todos/{todo_id}", status_code=200)
-def get_todo_handler(todo_id: int, session: Session = Depends(get_db)) -> ToDoSchema:
+def get_todo_handler(
+    todo_id: int, session: Session = Depends(get_db)
+) -> ToDoSchema:
     todo: ToDo | None = get_todo_by_id(session=session, todo_id=todo_id)
     if todo:
         return ToDoSchema.from_orm(todo)
@@ -49,7 +46,9 @@ def get_todo_handler(todo_id: int, session: Session = Depends(get_db)) -> ToDoSc
 
 
 @app.post("/todos", status_code=201)
-def create_todo_handler(request: CreateToDoRequest, session: Session = Depends(get_db)):
+def create_todo_handler(
+    request: CreateToDoRequest, session: Session = Depends(get_db)
+):
     todo: ToDo = ToDo.create(request=request)  # id = None
     todo: ToDo = create_todo(session=session, todo=todo)  # id = int
 
