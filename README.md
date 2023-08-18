@@ -1,7 +1,7 @@
 # cch-ToDo
 
 **Simple ToDo project** <br>
-fastAPI 공부를 위한 미니 프로젝트
+fastapi 공부를 위한 미니 프로젝트
 
 ### tools
 - python `3.10.12`
