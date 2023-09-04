@@ -13,3 +13,11 @@ class ToDoSchema(BaseModel):
 
 class ToDoListSchema(BaseModel):
     todos: List[ToDoSchema]
+
+
+class UserSchema(BaseModel):
+    id: int
+    username: int
+
+    class Config:
+        orm_mode = True
