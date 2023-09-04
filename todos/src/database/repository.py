@@ -5,7 +5,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 from todos.src.database.connection import get_db
 
-from todos.src.database.orm import ToDo
+from todos.src.database.orm import ToDo, User
 
 
 class ToDoRepository:
@@ -20,16 +20,27 @@ class ToDoRepository:
 
     def create_todo(self, todo: ToDo) -> ToDo:
         self.session.add(instance=todo)
-        self.session.commit()  # db save
+        self.session.commit()
         self.session.refresh(instance=todo)  # db read -> todo_id
         return todo
 
     def update_todo(self, todo: ToDo) -> ToDo:
         self.session.add(instance=todo)
-        self.session.commit()  # db save
+        self.session.commit()
         self.session.refresh(instance=todo)
         return todo
 
     def delete_todo(self, todo_id: int) -> None:
         self.session.execute(delete(ToDo).where(ToDo.id == todo_id))
         self.session.commit()
+
+
+class UserRepository:
+    def __init__(self, session: Session = Depends(get_db)):
+        self.session = session
+
+    def save_user(self, user: User) -> User:
+        self.session.add(instance=user)
+        self.session.commit()
+        self.session.refresh(instance=user)
+        return user
