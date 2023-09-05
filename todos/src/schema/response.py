@@ -17,7 +17,7 @@ class ToDoListSchema(BaseModel):
 
 class UserSchema(BaseModel):
     id: int
-    username: int
+    username: str
 
     class Config:
         orm_mode = True
