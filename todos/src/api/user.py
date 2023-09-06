@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from todos.src.database.orm import User
 from todos.src.database.repository import UserRepository
 
-from todos.src.schema.request import SignUpRequest
+from todos.src.schema.request import LogInRequest, SignUpRequest
 from todos.src.schema.response import UserSchema
 from todos.src.service.user import UserService
 
@@ -24,3 +24,27 @@ def user_sign_up_handler(
     user: User = user_repo.save_user(user=user)  # id = int
 
     return UserSchema.from_orm(user)
+
+
+@router.post("/log-in", status_code=200)
+def user_log_in_handler(
+    request: LogInRequest,
+    user_service: UserService = Depends(),
+    user_repo: UserRepository = Depends(),
+):
+    user: User | None = user_repo.get_user_by_username(
+        username=request.username
+    )
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User Not Found")
+
+    verified: bool = user_service.verify_password(
+        plain_password=request.password,
+        hashed_password=user.password,
+    )
+
+    if not verified:
+        raise HTTPException(status_code=401, detail="Not Authorized")
+
+    return True
