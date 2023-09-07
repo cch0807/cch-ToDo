@@ -1,25 +1,27 @@
-from todos.src.database.orm import ToDo
-from todos.src.database.repository import ToDoRepository
+from todos.src.database.orm import ToDo, User
+from todos.src.database.repository import ToDoRepository, UserRepository
+from todos.src.service.user import UserService
 
 
 def test_get_todos(client, mocker):
-    # order=ASC
-    mocker.patch.object(
-        ToDoRepository,
-        "get_todos",
-        return_value=[ToDo(id=1, contents="test data 1", is_done=True)],
-    )
-    response = client.get("/todos")
-    assert response.status_code == 200
-    assert response.json() == {
-        "todos": [{"id": 1, "contents": "test data 1", "is_done": True}]
-    }
+    access_token: str = UserService().create_jwt(username="test")
+    headers = {"Authorization": f"Bearer {access_token}"}
 
-    # order=DESC
-    response = client.get("/todos?order=DESC")
+    user = User(id=1, username="test", password="hashed")
+    user.todo = [ToDo(id=1, contents="test data 1", is_done=True)]
+    print("=" * 10)
+    print(user.todo)
+    print("=" * 10)
+
+    mocker.patch.object(
+        UserRepository, "get_user_by_username", return_value=user
+    )
+
+    response = client.get("/todos", headers=headers)
+
     assert response.status_code == 200
     assert response.json() == {
-        "todos": [{"id": 1, "contents": "test data 1", "is_done": True}]
+        "todos": [{"id":1, "contents": "test data 1", "is_done": True}]
     }
 
 

@@ -27,7 +27,7 @@ def get_todos_handler(
     if not user:
         raise HTTPException(status_code=404, detail="User Not Found")
 
-    todos: List[ToDo] = user.todos
+    todos: List[ToDo] = user.todo
 
     if order and order == "DESC":
         return ToDoListSchema(
