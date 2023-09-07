@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import bcrypt
 from jose import jwt
 
@@ -25,5 +26,14 @@ class UserService:
 
     def create_jwt(self, username: str) -> str:
         return jwt.encode(
-            username, self.secret_key, algorithm=self.jwt_algorithm
+            {"sub": username, "exp": datetime.now() + timedelta(days=1)},
+            self.secret_key,
+            algorithm=self.jwt_algorithm,
         )
+
+    def decode_jwt(self, access_token: str):
+        payload: dict = jwt.decode(
+            access_token, self.secret_key, algorithms=[self.jwt_algorithm]
+        )
+        # TODO: need token expire
+        return payload["sub"]

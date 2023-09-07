@@ -3,7 +3,7 @@ from todos.src.database.orm import User
 from todos.src.database.repository import UserRepository
 
 from todos.src.schema.request import LogInRequest, SignUpRequest
-from todos.src.schema.response import UserSchema
+from todos.src.schema.response import JWTResponse, UserSchema
 from todos.src.service.user import UserService
 
 router = APIRouter(prefix="/users")
@@ -47,4 +47,8 @@ def user_log_in_handler(
     if not verified:
         raise HTTPException(status_code=401, detail="Not Authorized")
 
-    return True
+    access_token: str = user_service.create_jwt(
+        username=user.username,
+    )
+
+    return JWTResponse(access_token=access_token)
