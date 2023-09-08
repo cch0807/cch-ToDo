@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from todos.src.database.orm import User
 from todos.src.database.repository import UserRepository
 
@@ -76,6 +76,7 @@ def create_otp_handler(
 @router.post("/email/otp/verify")
 def verify_otp_handler(
     request: VerifyOTPRequest,
+    background_tasks: BackgroundTasks,
     access_token: str = Depends(get_access_token),
     user_service: UserService = Depends(),
     user_repo: UserRepository = Depends(),
@@ -94,4 +95,7 @@ def verify_otp_handler(
         raise HTTPException(status_code=404, detail="User Not Found")
 
     # TODO: save email to user
+    background_tasks.add_task(
+        user_service.send_email_to_user, email="admin@fastapi.com"
+    )
     return UserSchema.from_orm(user)
