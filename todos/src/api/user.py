@@ -6,6 +6,7 @@ from todos.src.schema.request import (
     CreateOTPRequest,
     LogInRequest,
     SignUpRequest,
+    VerifyOTPRequest,
 )
 from todos.src.schema.response import JWTResponse, UserSchema
 from todos.src.service.user import UserService
@@ -73,5 +74,24 @@ def create_otp_handler(
 
 
 @router.post("/email/otp/verify")
-def verify_otp_handler():
-    return
+def verify_otp_handler(
+    request: VerifyOTPRequest,
+    access_token: str = Depends(get_access_token),
+    user_service: UserService = Depends(),
+    user_repo: UserRepository = Depends(),
+):
+    otp: str | None = redis_client.get(request.email)
+    if not otp:
+        raise HTTPException(status_code=400, detail="Bad Request")
+
+    if request.otp != int(otp):
+        raise HTTPException(status_code=400, detail="Bad Request")
+
+    username: str = user_service.decode_jwt(access_token=access_token)
+    user: User | None = user_repo.get_user_by_username(username)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User Not Found")
+
+    # TODO: save email to user
+    return UserSchema.from_orm(user)
