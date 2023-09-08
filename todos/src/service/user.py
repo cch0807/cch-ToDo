@@ -1,3 +1,4 @@
+import random
 from datetime import datetime, timedelta
 import bcrypt
 from jose import jwt
@@ -37,3 +38,7 @@ class UserService:
         )
         # TODO: need token expire
         return payload["sub"]
+
+    @staticmethod
+    def create_otp() -> int:
+        return random.randint(1000, 9999)

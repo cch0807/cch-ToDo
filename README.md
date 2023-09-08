@@ -3,7 +3,7 @@
 **Simple ToDo project** <br>
 fastapi 공부를 위한 미니 프로젝트
 
-### tools
+### Stacks
 - python `3.10.12`
 - fastapi `0.97.0`
 - sqlalchemy `2.0.19`
@@ -16,6 +16,6 @@ fastapi 공부를 위한 미니 프로젝트
 - uvicorn
 - black
 
-### database
+### Databases
 - mysql `8.0`
 - redis `7.0.5`
